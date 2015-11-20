@@ -1,5 +1,5 @@
 /*!
- * Webogram v0.4.6 - messaging web application for MTProto
+ * Webogram v0.5.0 - messaging web application for MTProto
  * https://github.com/zhukov/webogram
  * Copyright (C) 2014 Igor Zhukov <igor.beatle@gmail.com>
  * https://github.com/zhukov/webogram/blob/master/LICENSE
@@ -12,15 +12,15 @@ angular.module('izhukov.mtproto', ['izhukov.utils'])
 
   var dcOptions = Config.Modes.test
     ? [
-      {id: 1, host: '149.154.175.10', port: 80},
-      {id: 2, host: '149.154.167.40', port: 80},
-      {id: 3, host: '174.140.142.5', port: 80}
+      {id: 1, host: '149.154.175.10',  port: 80},
+      {id: 2, host: '149.154.167.40',  port: 80},
+      {id: 3, host: '149.154.175.117', port: 80}
     ]
     : [
-      {id: 1, host: '149.154.175.50', port: 80},
-      {id: 2, host: '149.154.167.51', port: 80},
+      {id: 1, host: '149.154.175.50',  port: 80},
+      {id: 2, host: '149.154.167.51',  port: 80},
       {id: 3, host: '149.154.175.100', port: 80},
-      {id: 4, host: '149.154.167.91', port: 80},
+      {id: 4, host: '149.154.167.91',  port: 80},
       {id: 5, host: '149.154.171.5',   port: 80}
     ];
 
@@ -31,7 +31,7 @@ angular.module('izhukov.mtproto', ['izhukov.utils'])
       var chosenServer = false,
           i, dcOption;
 
-      if (Config.Modes.ssl) {
+      if (Config.Modes.ssl || !Config.Modes.http) {
         var subdomain = sslSubdomains[dcID - 1] + (upload ? '-1' : '');
         var path = Config.Modes.test ? 'apiw_test1' : 'apiw1';
         chosenServer = 'https://' + subdomain + '.web.telegram.org/' + path;
@@ -797,8 +797,8 @@ angular.module('izhukov.mtproto', ['izhukov.utils'])
     // console.log('Set lp', this.longPollPending, tsNow());
 
     this.wrapMtpCall('http_wait', {
-      max_delay: 0,
-      wait_after: 0,
+      max_delay: 500,
+      wait_after: 150,
       max_wait: maxWait
     }, {
       noResponse: true,
@@ -1035,7 +1035,11 @@ angular.module('izhukov.mtproto', ['izhukov.utils'])
 
     if (hasApiCall && !hasHttpWait) {
       var serializer = new TLSerialization({mtproto: true});
-      serializer.storeMethod('http_wait', {max_delay: 0, wait_after: 0, max_wait: 1000});
+      serializer.storeMethod('http_wait', {
+        max_delay: 500,
+        wait_after: 150,
+        max_wait: 3000
+      });
       messages.push({
         msg_id: MtpTimeManager.generateID(),
         seq_no: this.generateSeqNo(),
@@ -1093,6 +1097,7 @@ angular.module('izhukov.mtproto', ['izhukov.utils'])
     var self = this;
     this.sendEncryptedRequest(message).then(function (result) {
       self.toggleOffline(false);
+      // console.log('parse for', message);
       self.parseResponse(result.data).then(function (response) {
         if (Config.Modes.debug) {
           console.log(dT(), 'Server response', self.dcID, response);
@@ -1283,7 +1288,7 @@ angular.module('izhukov.mtproto', ['izhukov.utils'])
                 result.body = {_: 'parse_error', error: e};
               }
               if (this.offset != offset + result.bytes) {
-                console.warn(dT(), 'set offset', this.offset, offset, result.bytes);
+                // console.warn(dT(), 'set offset', this.offset, offset, result.bytes);
                 // console.log(dT(), result);
                 this.offset = offset + result.bytes;
               }
@@ -1295,8 +1300,12 @@ angular.module('izhukov.mtproto', ['izhukov.utils'])
               var sentMessage = self.sentMessages[result.req_msg_id],
                   type = sentMessage && sentMessage.resultType || 'Object';
 
+              if (result.req_msg_id && !sentMessage) {
+                // console.warn(dT(), 'Result for unknown message', result);
+                return;
+              }
               result.result = this.fetchObject(type, field + '[result]');
-              // console.log(dT(), 'override rpc_result', type, result);
+              // console.log(dT(), 'override rpc_result', sentMessage, type, result);
             }
           }
         };

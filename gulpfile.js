@@ -8,6 +8,7 @@ var http = require('http');
 var livereload = require('gulp-livereload');
 var st = require('st');
 var less = require('gulp-less');
+var del = require('del');
 var runSequence = require('run-sequence');
 
 // The generated file is being created at src
@@ -104,7 +105,7 @@ gulp.task('compress-dist', ['build'], function() {
 });
 
 gulp.task('cleanup-dist', ['compress-dist'], function() {
-  return gulp.src(['releases/**/*', '!releases/*.zip']).pipe($.clean());
+  return del(['releases/**/*', '!releases/*.zip']);
 });
 
 gulp.task('update-version-manifests', function() {
@@ -240,7 +241,7 @@ gulp.task('server', function(done) {
 });
 
 gulp.task('clean', function() {
-  return gulp.src(['dist/*', 'app/js/templates.js', 'app/css/*', '!dist/.git']).pipe($.clean());
+  return del(['dist/*', 'app/js/templates.js', 'app/css/*', '!dist/.git']);
 });
 
 gulp.task('bump', ['update-version-manifests', 'update-version-config'], function () {

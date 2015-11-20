@@ -1,5 +1,5 @@
 /*!
- * Webogram v0.4.6 - messaging web application for MTProto
+ * Webogram v0.5.0 - messaging web application for MTProto
  * https://github.com/zhukov/webogram
  * Copyright (C) 2014 Igor Zhukov <igor.beatle@gmail.com>
  * https://github.com/zhukov/webogram/blob/master/LICENSE
@@ -102,6 +102,9 @@ TLSerialization.prototype.storeLong = function (sLong, field) {
     }
   }
 
+  if (typeof sLong != 'string') {
+    sLong = sLong ? sLong.toString() : '0';
+  }
   var divRem = bigStringInt(sLong).divideAndRemainder(bigint(0x100000000));
 
   this.writeInt(intToUint(divRem[1].intValue()), (field || '') + ':long[low]');
@@ -596,7 +599,7 @@ TLDeserialization.prototype.fetchObject = function (type, field) {
       }
     }
     if (!constructorData) {
-      throw new Error('Constructor not found: ' + constructor);
+      throw new Error('Constructor not found: ' + constructor +' '+ this.fetchInt()+' '+ this.fetchInt());
     }
   }
 

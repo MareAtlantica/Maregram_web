@@ -60,6 +60,9 @@ html {
       line-height: 0;
       height: auto;
     }
+    .navbar-quick-nav  .navbar-brand {
+      margin-right: 0;
+    }
   }
 
   .navbar-menu {
@@ -92,7 +95,6 @@ html {
     }
 
     .navbar-toggle {
-      &:hover,
       &:active,
       &:focus {
         background-color: rgba(255,255,255,0.1);
@@ -136,7 +138,9 @@ html {
 
 .tg_page_head {
   .navbar-inverse {
-    .navbar-toggle:hover,
+    .navbar-toggle:hover {
+      background-color: rgba(0,0,0,0.0);
+    }
     .open .navbar-toggle {
       background-color: rgba(0,0,0,0.1);
     }
@@ -205,8 +209,6 @@ html {
   border: 1px solid transparent;
   border-radius: 4px;
 
-  &:hover,
-  &:link,
   &:active {
     background-color: rgba(0,0,0,0.1);
   }
@@ -403,6 +405,13 @@ html {
     overflow: hidden;
   }
 
+  .peer_initials {
+    line-height: 36px;
+    font-size: 15px;
+    border-radius: 18px;
+    overflow: hidden;
+  }
+
   .navbar_peer_not_selected & {
     display: none;
   }
@@ -519,15 +528,9 @@ html {
   border: 0;
   overflow: hidden;
 }
-.im_history_selectable .im_message_outer_wrap:hover,
+.im_history_select_active .im_message_outer_wrap:hover,
 .im_message_selected {
   background: #e1e9f0;
-}
-
-.im_message_focus {
-  .im_message_outer_wrap {
-    background: rgba(225, 233, 240, 0.35);
-  }
 }
 
 .im_message_body {
@@ -792,7 +795,7 @@ img.im_message_video_thumb,
   margin-left: -60px;
   width: 60px;
   padding: 0 0 0 8px;
-  overflow: hidden;
+  // overflow: hidden;
 
   .im_message_out & {
     width: 80px;
@@ -800,6 +803,15 @@ img.im_message_video_thumb,
     text-align: right;
     margin-left: 0;
     padding: 0 8px 0 0;
+  }
+}
+
+.im_message_views {
+  top: -12px;
+  font-size: 10px;
+
+  .im_message_out & {
+    right: 0;
   }
 }
 
@@ -831,10 +843,10 @@ img.im_message_video_thumb,
 .im_message_focus .audio_player_duration,
 .im_message_focus .audio_player_size,
 .im_message_focus .im_message_fwd_date,
-.im_history_selectable .im_message_outer_wrap:hover .im_message_document_size,
-.im_history_selectable .im_message_outer_wrap:hover .audio_player_duration,
-.im_history_selectable .im_message_outer_wrap:hover .audio_player_size,
-.im_history_selectable .im_message_outer_wrap:hover .im_message_fwd_date {
+.im_history_select_active .im_message_outer_wrap:hover .im_message_document_size,
+.im_history_select_active .im_message_outer_wrap:hover .audio_player_duration,
+.im_history_select_active .im_message_outer_wrap:hover .audio_player_size,
+.im_history_select_active .im_message_outer_wrap:hover .im_message_fwd_date {
   color: #68839c;
 }
 
@@ -889,7 +901,7 @@ a.im_message_from_photo {
 
 
 .im_message_out {
-  .icon-message-status-tick {
+  .icon-message-status {
     border: 0;
     display: inline-block;
     width: 10px;
@@ -906,13 +918,13 @@ a.im_message_from_photo {
 }
 
 .im_message_unread {
-  .icon-message-status-tick {
+  .icon-message-status {
     background: #43A4DB;
   }
 }
 
 .im_message_pending {
-  .icon-message-status-tick {
+  .icon-message-status {
     background: #9fd2ee;
   }
 }
@@ -921,11 +933,15 @@ a.im_message_from_photo {
 .contacts_modal_search_field {
   font-size: 1.2em;
 }
+.im_edit_start_actions {
+  text-align: center;
+}
 .im_edit_selected_actions {
   text-align: center;
 }
 .im_edit_delete_btn,
-.im_edit_forward_btn {
+.im_edit_forward_btn,
+.im_start_btn {
   border-radius: 2px;
   font-weight: normal;
   line-height: 18px;
@@ -941,6 +957,9 @@ a.im_message_from_photo {
 }
 .im_edit_delete_btn {
   color: #c3584d !important;
+}
+.im_start_btn {
+  color: #497495 !important;
 }
 .im_edit_delete_btn strong,
 .im_edit_forward_btn strong {
@@ -1007,6 +1026,11 @@ a.im_dialog {
 
   div& {
     margin: 0 12px 0 0;
+
+    .peer_initials {
+      line-height: 54px;
+      font-size: 18px;
+    }
   }
 }
 
@@ -1077,10 +1101,10 @@ a.im_dialog {
 .im_message_selected .audio_player_title,
 .im_message_selected .audio_player_duration,
 .im_message_selected .audio_player_size,
-.im_history_selectable .im_message_selected:hover .im_message_document_size,
-.im_history_selectable .im_message_selected:hover .audio_player_duration,
-.im_history_selectable .im_message_selected:hover .audio_player_size,
-.im_history_selectable .im_message_selected:hover .im_message_fwd_date {
+.im_history_select_active .im_message_selected:hover .im_message_document_size,
+.im_history_select_active .im_message_selected:hover .audio_player_duration,
+.im_history_select_active .im_message_selected:hover .audio_player_size,
+.im_history_select_active .im_message_selected:hover .im_message_fwd_date {
   color: #fff;
 }
 a.im_message_fwd_author {
@@ -1099,6 +1123,10 @@ a.im_message_fwd_author {
   &.modal {
     background: #fff;
     padding: 0;
+  }
+
+  &.md_simple_modal_window .modal-dialog {
+    max-width: none;
   }
 
   .modal-content {
@@ -1138,6 +1166,11 @@ a.im_message_fwd_author {
     width: 64px;
     height: 64px;
     margin-right: 14px;
+
+    .peer_initials {
+      line-height: 64px;
+      font-size: 18px;
+    }
   }
 
   &_chat_modal_image {
@@ -1333,7 +1366,6 @@ a.im_message_fwd_author {
   height: 32px;
   padding: 3px 13px 4px 16px;
 
-  &:hover,
   &:active {
     .icon-paperclip {
       background-position: -12px -100px;
@@ -1404,6 +1436,7 @@ a.im_message_fwd_author {
 
     &:before {
       color: #999;
+      margin-top: 1px;
     }
   }
 
@@ -1419,51 +1452,76 @@ a.im_message_fwd_author {
 
 .composer_emoji_tooltip {
   margin-left: 6px;
-  margin-top: -170px;
-  width: 262px;
+  margin-top: -176px;
   z-index: 10000;
-  padding: 5px 2px 5px 5px;
+}
+.composer_emoji_tooltip_tab {
+  line-height: 15px;
+  font-size: 11px;
+}
 
+.composer_emoji_tooltip .scroller_native_scrollable {
+  height: 117px;
+}
+.composer_emoji_tooltip_tabs_wrap,
+.composer_emoji_tooltip_tab_emoji_content,
+.composer_emoji_tooltip_tab_stickers_content {
+  height: 147px;
+}
+.composer_emoji_tooltip_category {
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
 
-  & &_content_wrap {
-    height: 106px;
-  }
-
-  &_tabs {
-    margin-bottom: 3px;
-  }
-
-  & &_content {
-    .composer_emoji_btn {
-      padding: 5px;
-      margin: -1px 0 0 -1px;
+.composer_emoji_tooltip_categories {
+  .composer_emoji_tooltip_tab_stickers_content & {
+    .composer_sticker_btn {
+      padding-top: 0;
+      padding-bottom: 0;
+      margin: 0;
     }
   }
-
-  &_tab {
-    margin: 0 5px;
-  }
 }
 
-.icon-tooltip-tail {
+.composer_emoji_tooltip_tail {
   display: none;
+  left: 18px;
 }
 
-.composer_sticker {
-  &_btn {
-    width: 80px;
-    height: 80px;
-    padding: 3px;
-  }
-  &_image {
-    max-width: 64px;
-    max-height: 64px;
-  }
+.composer_dropdown_wrap {
+  box-shadow: none;
+}
+.composer_dropdown a.composer_command_option,
+.composer_dropdown a.composer_mention_option {
+  padding: 5px 12px;
+  font-size: 12px;
+  line-height: 25px;
+}
+.composer_user_name,
+.composer_user_mention {
+  line-height: 25px;
+}
+span.composer_user_photo,
+img.composer_user_photo {
+  width: 25px;
+  height: 25px;
+}
+
+.composer_dropdown a.composer_emoji_option {
+  padding: 5px 12px;
+  font-size: 13px;
+  line-height: 26px;
+}
+.composer_dropdown a.composer_emoji_option .emoji {
+  vertical-align: top;
+}
+.composer_emoji_shortcut {
+  line-height: 26px;
 }
 
 .contacts_modal {
   &_search {
-    padding: 3px 0 12px;
+    margin: -9px -9px 0;
   }
 
   &_col {
@@ -1490,9 +1548,16 @@ a.im_message_fwd_author {
     }
   }
 }
-.sessions_modal_wrap .mobile_modal_body {
+.modal-content .sessions_modal_wrap .mobile_modal_body {
   padding: 0;
 }
+.sessions_modal_session {
+  padding: 8px 15px;
+}
+.sessions_modal_terminate_all_wrap {
+  margin-left: 15px;
+}
+
 
 .mobile_modal {
   .peer_select_modal_wrap {
@@ -1684,4 +1749,39 @@ a.media_modal_date:hover {
 .stickerset_modal_sticker_wrap img {
   width: 64px;
   height: 64px;
+}
+
+.message_actions_modal_window {
+  max-width: 220px;
+  margin: 0 auto;
+}
+.message_actions_wrap {
+  padding: 10px 20px;
+}
+
+
+
+.im_send_reply_wrap {
+  margin-left: 38px;
+  margin-right: 10px;
+}
+.composer_rich_textarea,
+.composer_textarea {
+  .im_send_field_wrap_2ndbtn & {
+    padding-right: 35px;
+  }
+}
+.im_send_field_panel {
+  position: relative;
+}
+.composer_command_btn {
+  right: 10px;
+  top: 6px;
+}
+.composer_keyboard_btn {
+  right: 10px;
+  top: 6px;
+}
+.im_send_keyboard_wrap {
+  padding: 0 5px;
 }
